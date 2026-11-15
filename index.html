@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Gravity League - two AI models play Connect Four</title>
+        <meta
+            name="description"
+            content="Two language models play Connect Four against each other. Every move is a prompt. Bring your own Pollinations key, or watch the zero-Pollen demo."
+        />
+        <meta property="og:title" content="Gravity League - AI models play Connect Four" />
+        <meta
+            property="og:description"
+            content="Pick two models. They take turns dropping discs and explaining nothing. Bring your own Pollen or watch the demo."
+        />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <div class="sky" aria-hidden="true"></div>
+        <header class="masthead">
+            <a class="brand" href="./" aria-label="Gravity League home">
+                <span class="brand-discs" aria-hidden="true">
+                    <i class="brand-disc brand-disc-red"></i>
+                    <i class="brand-disc brand-disc-yellow"></i>
+                </span>
+                <span class="brand-text">GRAVITY <b>LEAGUE</b></span>
+            </a>
+            <p class="tagline">Two models. One board. Every move is a prompt.</p>
+            <div class="keybar">
+                <span id="keyState" class="key-state">Demo mode</span>
+                <button id="connectButton" class="mini-button" type="button">
+                    Connect key
+                </button>
+                <button id="disconnectButton" class="mini-button" type="button" hidden>
+                    Disconnect
+                </button>
+            </div>
+        </header>
+
+        <main class="page">
+            <section class="scoreboard card" aria-label="Match score">
+                <div class="player player-red">
+                    <span class="player-disc" aria-hidden="true"></span>
+                    <div class="player-meta">
+                        <span class="player-role">RED</span>
+                        <strong id="redName">Demo bot</strong>
+                    </div>
+                    <span id="redScore" class="player-score">0</span>
+                </div>
+                <div class="versus" aria-hidden="true">VS</div>
+                <div class="player player-yellow">
+                    <span class="player-disc" aria-hidden="true"></span>
+                    <div class="player-meta">
+                        <span class="player-role">YELLOW</span>
+                        <strong id="yellowName">Demo bot</strong>
+                    </div>
+                    <span id="yellowScore" class="player-score">0</span>
+                </div>
+                <div id="drawScore" class="draw-score">Draws 0</div>
+            </section>
+
+            <section class="arena">
+                <aside class="panel card">
+                    <h2>Match setup</h2>
+                    <label class="field">
+                        <span>Red model</span>
+                        <select id="redModel" aria-label="Red model"></select>
+                    </label>
+                    <label class="field">
+                        <span>Yellow model</span>
+                        <select id="yellowModel" aria-label="Yellow model"></select>
+                    </label>
+                    <div class="actions">
+                        <button id="startButton" class="primary" type="button">
+                            Start model match
+                        </button>
+                        <button id="demoButton" class="secondary" type="button">
+                            Watch demo
+                        </button>
+                        <button id="resetButton" class="ghost" type="button">
+                            Reset series
+                        </button>
+                    </div>
+                    <p class="hint">
+                        Each move is one short chat request paid by your own
+                        Pollinations key. The demo spends no Pollen.
+                    </p>
+                </aside>
+
+                <div class="board-column">
+                    <div id="turnBanner" class="turn-banner" role="status">
+                        Demo mode - press Watch demo
+                    </div>
+                    <div class="board-card card">
+                        <div id="columnButtons" class="column-buttons"></div>
+                        <div id="board" class="board" role="grid" aria-label="Connect Four board"></div>
+                    </div>
+                    <div id="statusLine" class="status-line">
+                        Connect a key to play two models, or watch the demo.
+                    </div>
+                </div>
+
+                <aside class="panel card log-panel">
+                    <div class="panel-heading">
+                        <h2>Move log</h2>
+                        <span id="moveCount" class="move-count">0 moves</span>
+                    </div>
+                    <ol id="moveLog" class="move-log"></ol>
+                    <div class="legend">
+                        <span><i class="legend-disc legend-red"></i> Red</span>
+                        <span><i class="legend-disc legend-yellow"></i> Yellow</span>
+                        <span><i class="legend-disc legend-empty"></i> Empty</span>
+                    </div>
+                </aside>
+            </section>
+
+            <section class="how card">
+                <h2>How this works</h2>
+                <div class="how-grid">
+                    <div>
+                        <h3>One board, two prompts</h3>
+                        <p>
+                            Red and Yellow alternate. On each turn the app sends
+                            the board and the legal columns to that model and
+                            asks for one digit. A reply that is not a legal
+                            column falls back to the local bot, and the log says
+                            so.
+                        </p>
+                    </div>
+                    <div>
+                        <h3>Your key, your Pollen</h3>
+                        <p>
+                            The key stays in your browser and is sent only to
+                            <code>gen.pollinations.ai</code>. There is no backend
+                            and no shared key. Get one at
+                            <a href="https://enter.pollinations.ai/keys" target="_blank" rel="noreferrer">enter.pollinations.ai/keys</a>.
+                        </p>
+                    </div>
+                    <div>
+                        <h3>No-key demo</h3>
+                        <p>
+                            The demo runs two local heuristic players. It never
+                            calls a model and never spends Pollen, so you can
+                            watch a whole game without connecting anything.
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <span>
+                Made with
+                <a href="https://pollinations.ai" target="_blank" rel="noreferrer">Pollinations</a>.
+                Built for quest <a href="https://github.com/pollinations/pollinations/issues/19176" target="_blank" rel="noreferrer">#19176</a>.
+            </span>
+            <span class="footer-small">Connect Four is a trademark of its owner. This is a fan-made model game.</span>
+        </footer>
+
+        <dialog id="keyDialog" class="key-dialog">
+            <form method="dialog" class="key-form">
+                <h2>Connect a Pollinations key</h2>
+                <p>
+                    The key is stored in <code>localStorage</code> and sent only
+                    to <code>gen.pollinations.ai</code>. Create one at
+                    <a href="https://enter.pollinations.ai/keys" target="_blank" rel="noreferrer">enter.pollinations.ai/keys</a>.
+                </p>
+                <label class="field">
+                    <span>Secret key</span>
+                    <input id="keyInput" type="password" autocomplete="off" spellcheck="false" placeholder="sk_..." />
+                </label>
+                <p id="keyError" class="key-error" role="alert"></p>
+                <div class="dialog-actions">
+                    <button id="saveKeyButton" class="primary" type="button">Connect</button>
+                    <button class="secondary" value="cancel">Cancel</button>
+                </div>
+            </form>
+        </dialog>
+
+        <script src="app.js"></script>
+    </body>
+</html>
